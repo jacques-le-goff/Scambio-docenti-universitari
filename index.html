@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Exchange Matcher - Matching Docenti Universitari</title>
+    <style>
+        :root {
+            --color-primary: #2180A8;
+            --color-primary-hover: #1A6A8F;
+            --color-success: #2BA898;
+            --color-bg: #F5F5F5;
+            --color-surface: #FFFFFF;
+            --color-text: #1F2121;
+            --color-text-secondary: #626C7C;
+            --color-border: #D9D9D9;
+            --color-error: #C01527;
+            --color-warning: #A84B2F;
+            --space-8: 8px;
+            --space-16: 16px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius: 8px;
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: var(--space-16);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--color-surface);
+            padding: var(--space-32) var(--space-16);
+            border-radius: var(--radius);
+            margin-bottom: var(--space-32);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 var(--space-8) 0;
+            font-size: 28px;
+            color: var(--color-primary);
+        }
+
+        .subtitle {
+            margin: 0;
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        .coffee-banner {
+            background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+            color: white;
+            padding: var(--space-16);
+            border-radius: var(--radius);
+            text-align: center;
+            margin-top: var(--space-16);
+            font-size: 14px;
+        }
+
+        .coffee-banner a {
+            color: white;
+            text-decoration: underline;
+            font-weight: bold;
+            margin-left: var(--space-8);
+        }
+
+        .tabs {
+            display: flex;
+            gap: var(--space-8);
+            margin-bottom: var(--space-24);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: var(--space-16) var(--space-24);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            border-bottom: 3px solid transparent;
+            transition: all 200ms ease;
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-btn:hover {
+            color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-24);
+            background: var(--color-surface);
+            padding: var(--space-24);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        label {
+            display: block;
+            margin-bottom: var(--space-8);
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--color-text);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: var(--space-12) var(--space-16);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 200ms ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(33, 128, 168, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-12);
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-12);
+            background: #F9F9F9;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background 200ms ease;
+        }
+
+        .checkbox-item:hover {
+            background: #F0F0F0;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: var(--space-12);
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .region-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-12);
+        }
+
+        button {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: var(--space-12) var(--space-24);
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 200ms ease;
+        }
+
+        button:hover {
+            background: var(--color-primary-hover);
+        }
+
+        button:disabled {
+            background: #CCCCCC;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--color-text-secondary);
+            margin-top: var(--space-12);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-text);
+        }
+
+        .message {
+            padding: var(--space-16);
+            border-radius: var(--radius);
+            margin-bottom: var(--space-16);
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #E8F5E9;
+            color: #2E7D32;
+            border: 1px solid #4CAF50;
+        }
+
+        .message.error {
+            background: #FFEBEE;
+            color: #C62828;
+            border: 1px solid #F44336;
+        }
+
+        .message.info {
+            background: #E3F2FD;
+            color: #1565C0;
+            border: 1px solid #2196F3;
+        }
+
+        .profile-list {
+            display: grid;
+            gap: var(--space-24);
+        }
+
+        .profile-card {
+            background: var(--color-surface);
+            padding: var(--space-24);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .profile-card h3 {
+            margin: 0 0 var(--space-12) 0;
+            color: var(--color-primary);
+            font-size: 18px;
+        }
+
+        .profile-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-16);
+            margin-bottom: var(--space-16);
+            font-size: 14px;
+        }
+
+        .profile-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-info-label {
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-4);
+        }
+
+        .profile-info-value {
+            color: var(--color-text);
+        }
+
+        .regions-list {
+            background: #F9F9F9;
+            padding: var(--space-12) var(--space-16);
+            border-radius: var(--radius);
+            margin-bottom: var(--space-12);
+        }
+
+        .regions-list strong {
+            display: block;
+            margin-bottom: var(--space-8);
+            color: var(--color-text-secondary);
+            font-size: 13px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-8);
+        }
+
+        .tag {
+            background: var(--color-primary);
+            color: white;
+            padding: var(--space-4) var(--space-12);
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .tag.gray {
+            background: #999999;
+        }
+
+        .match-info {
+            padding: var(--space-16);
+            background: #E8F5E9;
+            border-left: 4px solid var(--color-success);
+            border-radius: var(--radius);
+            margin-top: var(--space-16);
+            font-size: 14px;
+            color: #2E7D32;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-32);
+            color: var(--color-text-secondary);
+        }
+
+        .icon {
+            font-size: 48px;
+            margin-bottom: var(--space-16);
+        }
+
+        @media (max-width: 600px) {
+            .profile-info {
+                grid-template-columns: 1fr;
+            }
+
+            .region-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: var(--space-12) var(--space-16);
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Scambio Contestuale Docenti Universitari</h1>
+            <p class="subtitle">Coordinamento per scambio sede tra docenti universitari italiani</p>
+            <div class="coffee-banner">
+                ☕ Se trovi utile questo servizio, <a href="https://buymeacoffee.com" target="_blank" rel="noopener noreferrer">offrimi un caffè</a>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('profile')">Il Mio Profilo</button>
+            <button class="tab-btn" onclick="switchTab('search')">Cerca Match</button>
+            <button class="tab-btn" onclick="switchTab('view')">Tutti i Profili</button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <!-- TAB 1: PROFILE -->
+        <div id="profile" class="tab-content active">
+            <div class="form-group">
+                <h2>Registra il Tuo Profilo</h2>
+                <p style="color: var(--color-text-secondary); margin-top: 0;">Compila i dati per partecipare al matching automatico</p>
+
+                <label for="fullName">Nome e Cognome <span style="color: var(--color-text-secondary);">(facoltativo - rimani anonimo)</span></label>
+                <input type="text" id="fullName" placeholder="es. Marco Rossi (lascia vuoto se preferisci l'anonimato)">
+
+                <label for="university">Università</label>
+                <input type="text" id="university" placeholder="es. Università di Siena">
+
+                <label for="position">Posizione Accademica</label>
+                <select id="position">
+                    <option value="">Seleziona...</option>
+                    <option value="PA">Professore Associato (PA)</option>
+                    <option value="PO">Professore Ordinario (PO)</option>
+                    <option value="RD">Ricercatore a Tempo Determinato (RD) - entro 1 anno da PA</option>
+                </select>
+
+                <label for="areaGSD">Area Scientifica (Aree 1-14) <span style="color: var(--color-text-secondary);">(facoltativo)</span></label>
+                <select id="areaGSD">
+                    <option value="">-- Nessuna --</option>
+                    <option value="01">AREA 01 - Mathematics and Informatics</option>
+                    <option value="02">AREA 02 - Physics</option>
+                    <option value="03">AREA 03 - Chemistry</option>
+                    <option value="04">AREA 04 - Earth Sciences</option>
+                    <option value="05">AREA 05 - Biology</option>
+                    <option value="06">AREA 06 - Medicine</option>
+                    <option value="07">AREA 07 - Agricultural and Veterinary Sciences</option>
+                    <option value="08">AREA 08 - Civil Engineering and Architecture</option>
+                    <option value="09">AREA 09 - Industrial and Information Engineering</option>
+                    <option value="10">AREA 10 - Antiquities, Philology, Literary Studies, Art History</option>
+                    <option value="11">AREA 11 - History, Philosophy, Pedagogy and Psychology</option>
+                    <option value="12">AREA 12 - Law Studies</option>
+                    <option value="13">AREA 13 - Economics and Statistics</option>
+                    <option value="14">AREA 14 - Political and Social Sciences</option>
+                </select>
+
+                <label for="gsdText">Specifica il GSD o la disciplina <span style="color: var(--color-text-secondary);">(facoltativo - testo libero)</span></label>
+                <input type="text" id="gsdText" placeholder="es. 13/ECON-01, Econometria, Finanza, ecc.">
+
+                <label for="email">Email (qualsiasi email valida)</label>
+                <input type="email" id="email" placeholder="es. marco.rossi@unisienait o altra email personale">
+
+                <label>Regioni di Interesse</label>
+                <div class="region-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-abruzzo" value="Abruzzo" class="region-checkbox">
+                        <label for="reg-abruzzo">Abruzzo</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-basilicata" value="Basilicata" class="region-checkbox">
+                        <label for="reg-basilicata">Basilicata</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-calabria" value="Calabria" class="region-checkbox">
+                        <label for="reg-calabria">Calabria</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-campania" value="Campania" class="region-checkbox">
+                        <label for="reg-campania">Campania</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-emilia" value="Emilia-Romagna" class="region-checkbox">
+                        <label for="reg-emilia">Emilia-Romagna</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-friuli" value="Friuli-Venezia Giulia" class="region-checkbox">
+                        <label for="reg-friuli">Friuli-Venezia Giulia</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-lazio" value="Lazio" class="region-checkbox">
+                        <label for="reg-lazio">Lazio</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-liguria" value="Liguria" class="region-checkbox">
+                        <label for="reg-liguria">Liguria</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-lombardia" value="Lombardia" class="region-checkbox">
+                        <label for="reg-lombardia">Lombardia</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-marche" value="Marche" class="region-checkbox">
+                        <label for="reg-marche">Marche</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-molise" value="Molise" class="region-checkbox">
+                        <label for="reg-molise">Molise</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-piemonte" value="Piemonte" class="region-checkbox">
+                        <label for="reg-piemonte">Piemonte</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-puglia" value="Puglia" class="region-checkbox">
+                        <label for="reg-puglia">Puglia</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-sardegna" value="Sardegna" class="region-checkbox">
+                        <label for="reg-sardegna">Sardegna</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-sicilia" value="Sicilia" class="region-checkbox">
+                        <label for="reg-sicilia">Sicilia</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-toscana" value="Toscana" class="region-checkbox">
+                        <label for="reg-toscana">Toscana</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-trentino" value="Trentino-Alto Adige" class="region-checkbox">
+                        <label for="reg-trentino">Trentino-Alto Adige</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-umbria" value="Umbria" class="region-checkbox">
+                        <label for="reg-umbria">Umbria</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-valle" value="Valle d'Aosta" class="region-checkbox">
+                        <label for="reg-valle">Valle d'Aosta</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reg-veneto" value="Veneto" class="region-checkbox">
+                        <label for="reg-veneto">Veneto</label>
+                    </div>
+                </div>
+
+                <label style="margin-top: var(--space-24);">Università Telematiche</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="radio" id="telematic-yes" name="telematic" value="yes">
+                        <label for="telematic-yes">Sì, accetto scambio con università telematiche</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="radio" id="telematic-no" name="telematic" value="no" checked>
+                        <label for="telematic-no">No, preferisco università tradizionali</label>
+                    </div>
+                </div>
+
+                <button onclick="saveProfile()" style="margin-top: var(--space-24);">💾 Salva Profilo</button>
+            </div>
+        </div>
+
+        <!-- TAB 2: SEARCH MATCHES -->
+        <div id="search" class="tab-content">
+            <div class="form-group">
+                <h2>I Tuoi Match Automatici</h2>
+                <p style="color: var(--color-text-secondary); margin-top: 0;">Visualizza i match trovati per il tuo profilo</p>
+                <button onclick="findMatches()">🔍 Cerca Match Ora</button>
+                <div id="matches-container" style="margin-top: var(--space-24);"></div>
+            </div>
+        </div>
+
+        <!-- TAB 3: VIEW ALL PROFILES -->
+        <div id="view" class="tab-content">
+            <div class="form-group">
+                <h2>Tutti i Profili Registrati</h2>
+                <p style="color: var(--color-text-secondary); margin-top: 0;">Database completo di tutti i docenti registrati</p>
+                <div id="all-profiles-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Local storage key
+        const STORAGE_KEY = 'professorExchangeDB';
+
+        // Initialize database
+        function initDB() {
+            if (!localStorage.getItem(STORAGE_KEY)) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    profiles: [],
+                    matches: []
+                }));
+            }
+        }
+
+        // Get database
+        function getDB() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY));
+        }
+
+        // Save database
+        function saveDB(db) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+        }
+
+        // Show message
+        function showMessage(text, type = 'info') {
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = text;
+            msgEl.className = `message show ${type}`;
+            setTimeout(() => msgEl.classList.remove('show'), 5000);
+        }
+
+        // Switch tabs
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'view') {
+                viewAllProfiles();
+            }
+        }
+
+        // Save profile
+        function saveProfile() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const university = document.getElementById('university').value.trim();
+            const position = document.getElementById('position').value;
+            const areaGSD = document.getElementById('areaGSD').value;
+            const gsdText = document.getElementById('gsdText').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const regions = Array.from(document.querySelectorAll('.region-checkbox:checked')).map(e => e.value);
+            const telematic = document.querySelector('input[name="telematic"]:checked').value;
+
+            // Nome è facoltativo
+            const displayName = fullName || `Anonimo_${Date.now()}`;
+
+            if (!university || !position || !email || regions.length === 0) {
+                showMessage('❌ Compila i campi obbligatori: Università, Posizione, Email e seleziona almeno una regione', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showMessage('❌ Inserisci un email valida', 'error');
+                return;
+            }
+
+            const db = getDB();
+            const profile = {
+                id: Date.now(),
+                fullName: displayName,
+                university,
+                position,
+                areaGSD,
+                gsdText,
+                email,
+                regions,
+                telematic,
+                createdAt: new Date().toISOString()
+            };
+
+            db.profiles.push(profile);
+            saveDB(db);
+
+            // Clear form
+            document.getElementById('fullName').value = '';
+            document.getElementById('university').value = '';
+            document.getElementById('position').value = '';
+            document.getElementById('areaGSD').value = '';
+            document.getElementById('gsdText').value = '';
+            document.getElementById('email').value = '';
+            document.querySelectorAll('.region-checkbox').forEach(c => c.checked = false);
+
+            showMessage('✅ Profilo salvato! Complimenti sei nel sistema.', 'success');
+        }
+
+        // Find matches
+        function findMatches() {
+            const db = getDB();
+            if (db.profiles.length === 0) {
+                showMessage('⚠️ Nessun profilo disponibile per il matching', 'error');
+                return;
+            }
+
+            const yourProfile = db.profiles[db.profiles.length - 1];
+            const matchedProfiles = [];
+
+            db.profiles.forEach(otherProfile => {
+                if (otherProfile.id === yourProfile.id) return;
+
+                // Check regions intersection (unidirezionale: other cerca le tue regioni)
+                const regionMatch = otherProfile.regions.some(r => yourProfile.regions.includes(r));
+                
+                // Check telematic compatibility
+                const telematicMatch = yourProfile.telematic === 'yes' || otherProfile.telematic === 'no';
+
+                if (regionMatch && telematicMatch) {
+                    matchedProfiles.push(otherProfile);
+                }
+            });
+
+            const container = document.getElementById('matches-container');
+            if (matchedProfiles.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🔍</div>
+                        <p>Nessun match trovato al momento.</p>
+                        <p style="font-size: 13px;">Aggiungi più docenti o espandi le tue preferenze regionali.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = matchedProfiles.map(profile => `
+                <div class="profile-card">
+                    <h3>${profile.fullName}</h3>
+                    <div class="profile-info">
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">Università</span>
+                            <span class="profile-info-value">${profile.university}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">Posizione</span>
+                            <span class="profile-info-value">${profile.position}</span>
+                        </div>
+                    </div>
+                    <div class="regions-list">
+                        <strong>Regioni di interesse:</strong>
+                        <div class="tags">
+                            ${profile.regions.map(r => `<span class="tag">${r}</span>`).join('')}
+                        </div>
+                    </div>
+                    ${profile.areaGSD || profile.gsdText ? `<p><strong>Area/GSD:</strong> ${profile.areaGSD ? 'AREA ' + profile.areaGSD + (profile.gsdText ? ' - ' + profile.gsdText : '') : profile.gsdText}</p>` : ''}
+                    <div class="match-info">
+                        ✅ <strong>MATCH TROVATO!</strong> Contatta: <strong>${profile.email}</strong>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // View all profiles
+        function viewAllProfiles() {
+            const db = getDB();
+            const container = document.getElementById('all-profiles-container');
+
+            if (db.profiles.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📋</div>
+                        <p>Nessun profilo registrato ancora.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = db.profiles.map(profile => `
+                <div class="profile-card">
+                    <h3>${profile.fullName}</h3>
+                    <div class="profile-info">
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">Università</span>
+                            <span class="profile-info-value">${profile.university}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">Posizione</span>
+                            <span class="profile-info-value">${profile.position}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">Telematiche</span>
+                            <span class="profile-info-value">${profile.telematic === 'yes' ? '✅ Accetta' : '❌ No'}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">Email</span>
+                            <span class="profile-info-value"><a href="mailto:${profile.email}">${profile.email}</a></span>
+                        </div>
+                    </div>
+                    <div class="regions-list">
+                        <strong>Regioni di interesse:</strong>
+                        <div class="tags">
+                            ${profile.regions.map(r => `<span class="tag">${r}</span>`).join('')}
+                        </div>
+                    </div>
+                    ${profile.areaGSD || profile.gsdText ? `<p><strong>Area/GSD:</strong> ${profile.areaGSD ? 'AREA ' + profile.areaGSD + (profile.gsdText ? ' - ' + profile.gsdText : '') : profile.gsdText}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Initialize
+        initDB();
+    </script>
+</body>
+</html>
